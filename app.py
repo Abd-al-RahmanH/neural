@@ -38,8 +38,8 @@ llm = Model(ModelTypes.CODELLAMA_34B_INSTRUCT_HF, creds, params, project_id)
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Function to query NeuralSeek
 def query_neuralseek(question):
+    """Queries the NeuralSeek API."""
     payload = {
         "question": question,
         "user_session": {
@@ -55,15 +55,18 @@ def query_neuralseek(question):
     else:
         return f"Failed to retrieve answer from NeuralSeek: {response.status_code}"
 
-# Function to query Watsonx LLM
 def query_watsonx(question):
+    """Queries the Watsonx LLM."""
     prompttemplate = f"""
     [INST]<<SYS>>Provide a detailed response in English<<SYS>>
     {question}
     [/INST]
     """
     response = llm.generate_text(prompttemplate)
-    return response if response else "No answer found from Watsonx."
+    if response:
+        return response
+    else:
+        return "No answer found from Watsonx."
 
 # Streamlit app layout
 st.title("NeuralSeek and Watsonx LLM Chat")
@@ -74,11 +77,12 @@ for chat in reversed(st.session_state.chat_history):
     st.write(f"**You:** {chat['question']}")
     st.write(f"**Response:** {chat['response']}")
 
-# Input bar at the bottom
-question = st.text_input("Enter your question:")
+# Input bar at the bottom with a temporary placeholder
+input_container = st.empty()
+question = input_container.text_input("Enter your question:")
 
-# Button to submit the question
-if st.button("Submit"):
+# Handle new question submission
+if question:
     # Choose model based on query content
     if "specific_keyword" in question.lower():
         response = query_neuralseek(question)
@@ -88,5 +92,6 @@ if st.button("Submit"):
     # Add question and response to chat history
     st.session_state.chat_history.append({"question": question, "response": response})
 
-    # Clear the input box by setting it to an empty string
-    st.experimental_rerun()
+    # Clear the input box after submission by reinitializing it
+    input_container.empty()  # Clear the input box temporarily
+    input_container.text_input("Enter your question:", value="", key="new_input")
