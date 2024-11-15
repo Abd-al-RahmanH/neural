@@ -38,8 +38,8 @@ llm = Model(ModelTypes.CODELLAMA_34B_INSTRUCT_HF, creds, params, project_id)
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+# Function to query NeuralSeek
 def query_neuralseek(question):
-    """Queries the NeuralSeek API."""
     payload = {
         "question": question,
         "user_session": {
@@ -55,18 +55,15 @@ def query_neuralseek(question):
     else:
         return f"Failed to retrieve answer from NeuralSeek: {response.status_code}"
 
+# Function to query Watsonx LLM
 def query_watsonx(question):
-    """Queries the Watsonx LLM."""
     prompttemplate = f"""
     [INST]<<SYS>>Provide a detailed response in English<<SYS>>
     {question}
     [/INST]
     """
     response = llm.generate_text(prompttemplate)
-    if response:
-        return response
-    else:
-        return "No answer found from Watsonx."
+    return response if response else "No answer found from Watsonx."
 
 # Streamlit app layout
 st.title("NeuralSeek and Watsonx LLM Chat")
@@ -78,12 +75,11 @@ for chat in reversed(st.session_state.chat_history):
     st.write(f"**Response:** {chat['response']}")
 
 # Input bar at the bottom
-question = st.text_input("Enter your question:", key="question_input")
+question = st.text_input("Enter your question:")
 
-# Handle new question submission
-if question:
+# Button to submit the question
+if st.button("Submit"):
     # Choose model based on query content
-    # Replace "specific_keyword" with logic to identify NeuralSeek-specific queries if necessary
     if "specific_keyword" in question.lower():
         response = query_neuralseek(question)
     else:
@@ -92,5 +88,5 @@ if question:
     # Add question and response to chat history
     st.session_state.chat_history.append({"question": question, "response": response})
 
-    # Clear the input box after submission by reinitializing the text input key
-    st.session_state["question_input"] = None
+    # Clear the input box by setting it to an empty string
+    st.experimental_rerun()
