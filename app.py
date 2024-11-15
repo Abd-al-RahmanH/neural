@@ -1,36 +1,30 @@
 import streamlit as st
 import requests
 
+# NeuralSeek Webhook Details
+API_URL = "https://api.neuralseek.com/v1/crn%3Av1%3Abluemix%3Apublic%3Aneuralseek%3Aus-south%3Aa%2F3d921d6e5e204570a252619c28d03770%3A74ef5ca7-03d9-4b62-b3e9-7fe92d57b60b%3A%3A/seek"  # Replace with your URL from the Webhook page
+API_KEY = "0635bf09-28e77037-673a0b92-1494764a"  # Replace with your API Key
+
 # Streamlit UI
-st.title("Neural Seek with Streamlit")
-st.write("Enter your query below to interact with Neural Seek:")
+st.title("NeuralSeek Chat Interface")
+user_input = st.text_input("Ask NeuralSeek:")
 
-# Input Field
-user_query = st.text_input("Query", placeholder="Type your query here...")
-
-# Submit Button
 if st.button("Submit"):
-    if user_query:
-        # Neural Seek API Call
-        url = "https://api.neuralseek.com/crn:v1:bluemix:public:neuralseek:us-south:a/3d921d6e5e204570a252619c28d03770:74ef5ca7-03d9-4b62-b3e9-7fe92d57b60b"  # Replace with actual API endpoint
-        headers = {
-            "Authorization": "0635bf09-28e77037-673a0b92-1494764a",  # Replace with your API key
-            "Content-Type": "application/json"
-        }
-        payload = {"query": user_query}
+    # Define the payload and headers
+    payload = {
+        "userId": "streamlit_user",  # You can customize this
+        "message": user_input
+    }
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
 
-        try:
-            response = requests.post(url, json=payload, headers=headers)
-            if response.status_code == 200:
-                result = response.json()
-                # Display Results
-                st.write("Result:")
-                st.write(result.get("answer", "No answer found."))
-            else:
-                st.error(f"Error {response.status_code}: {response.text}")
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+    # Make a request to NeuralSeek Webhook
+    response = requests.post(API_URL, json=payload, headers=headers)
+
+    if response.status_code == 200:
+        result = response.json()
+        st.write("NeuralSeek Response:", result.get("answer", "No answer available"))
     else:
-        st.warning("Please enter a query.")
-
-# Run the Streamlit app using streamlit run streamlit_app.py
+        st.error("Failed to get a response from NeuralSeek")
