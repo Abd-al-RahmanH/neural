@@ -12,7 +12,7 @@ user_query = st.text_input("Query", placeholder="Type your query here...")
 if st.button("Submit"):
     if user_query:
         # Neural Seek API Call
-        url = "https://api.neuralseek.com/v1/crn%3Av1%3Abluemix%3Apublic%3Aneuralseek%3Aus-south%3Aa%2F3d921d6e5e204570a252619c28d03770%3A74ef5ca7-03d9-4b62-b3e9-7fe92d57b60b%3A%3A"  # Replace with actual API endpoint
+        url = "https://api.neuralseek.com/crn:v1:bluemix:public:neuralseek:us-south:a/3d921d6e5e204570a252619c28d03770:74ef5ca7-03d9-4b62-b3e9-7fe92d57b60b"  # Replace with actual API endpoint
         headers = {
             "Authorization": "0635bf09-28e77037-673a0b92-1494764a",  # Replace with your API key
             "Content-Type": "application/json"
