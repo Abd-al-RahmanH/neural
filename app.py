@@ -7,7 +7,7 @@ from ibm_watson_machine_learning.foundation_models import Model
 from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
 
 # Load environment variables
-load_dotenv()
+#load_dotenv()
 api_key = "zf-5qgRvW-_RMBGb0bQw5JPPGGj5wdYpLVypdjQxBGJz"#os.getenv("API_KEY")
 project_id = "32a4b026-a46a-48df-aae3-31e16caabc3b"#os.getenv("PROJECT_ID")
 
