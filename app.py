@@ -1,8 +1,10 @@
+import os
 import streamlit as st
 import requests
 from ibm_watson_machine_learning.foundation_models.utils.enums import ModelTypes
 from ibm_watson_machine_learning.foundation_models import Model
 from ibm_watson_machine_learning.metanames import GenTextParamsMetaNames as GenParams
+from dotenv import load_dotenv
 
 # NeuralSeek API setup
 neuralseek_url = "https://api.neuralseek.com/v1/crn%3Av1%3Abluemix%3Apublic%3Aneuralseek%3Aus-south%3Aa%2F3d921d6e5e204570a252619c28d03770%3A74ef5ca7-03d9-4b62-b3e9-7fe92d57b60b%3A%3A/seek"
@@ -13,7 +15,8 @@ neuralseek_headers = {
 }
 
 # Watsonx API setup for IBM Watson Model
-api_key = "zf-5qgRvW-_RMBGb0bQw5JPPGGj5wdYpLVypdjQxBGJz"
+load_dotenv()
+api_key = os.getenv("API_KEY") 
 project_id = "32a4b026-a46a-48df-aae3-31e16caabc3b"
 
 creds = {
